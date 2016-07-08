@@ -1,0 +1,49 @@
+{
+    "name": "git-easy",
+    "displayName": "Git Easy",
+    "description": "Making git easy and convenient",
+    "version": "0.0.1",
+    "publisher": "bibhasdn",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "dependencies": {
+        "simple-git": "*"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.countChars",
+        "onCommand:extension.doOriginPull",
+        "onCommand:extension.doOriginPush",
+        "onCommand:extension.doStatus",
+        "onCommand:extension.doAdd"
+    ],
+    "main": "./extension",
+    "contributes": {
+        "commands": [{
+            "command": "extension.countChars",
+            "title": "Count Characters"
+        }, {
+            "command": "extension.doOriginPull",
+            "title": "Git Easy: Pull Current Branch"
+        }, {
+            "command": "extension.doOriginPush",
+            "title": "Git Easy: Push Current Branch"
+        }, {
+            "command": "extension.doAdd",
+            "title": "Git Easy: Add"
+        }, {
+            "command": "extension.doStatus",
+            "title": "Git Easy: Status"
+        }]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "vscode": "^0.11.0",
+        "simple-git": "*"
+    }
+}
