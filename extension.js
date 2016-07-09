@@ -77,11 +77,58 @@ function activate(context) {
         });
     });
 
-    var disposableCommit = vscode.commands.registerCommand('giteasy.doCommit', function () {
-        var commit = vscode.window.showInputBox({
-            'placeHolder': "Enter your commit message"
+    var disposableChangeBranch = vscode.commands.registerCommand('giteasy.doChangeBranch', function () {
+        simpleGit.branch(function(error, branchSummary) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+            console.log(branchSummary);
+            var branches = [];
+            branchSummary.all.forEach(function(element) {
+                if (!element.startsWith("remotes/")) {
+                    if (element == branchSummary.current) {
+                        branches.push("(current) " + element);
+                    } else {
+                        branches.push(element);
+                    }
+                }
+            }, this);
+            vscode.window.showQuickPick(branches).then(function(result) {
+                if (result == null) {
+                    return;
+                }
+                if (!result.startsWith("(current)")) {
+                    simpleGit.checkout(result, function (error, result) {
+                        if (error) {
+                            showOutput(error);
+                        } else {
+                            console.log(result);
+                        }
+                    })
+                }
+            })
         });
-        commit.then(function (message) {
+    });
+
+    var disposableCreateBranch = vscode.commands.registerCommand('giteasy.doCreateBranch', function () {
+        vscode.window.showInputBox({
+            'placeHolder': "Enter new branch name"
+        }).then(function (branchName) {
+            simpleGit.checkoutLocalBranch(branchName, function (error, result) {
+                if (error) {
+                    showOutput(error);
+                } else {
+                    console.log(result);
+                }
+            })
+        });
+    });
+
+    var disposableCommit = vscode.commands.registerCommand('giteasy.doCommit', function () {
+        vscode.window.showInputBox({
+            'placeHolder': "Enter your commit message"
+        }).then(function (message) {
             if (message === undefined) {
                 return;
             } else if (message === "") {
@@ -203,6 +250,8 @@ function activate(context) {
     context.subscriptions.push(disposableStatus);
     context.subscriptions.push(disposableCommit);
     context.subscriptions.push(disposableAddOrigin);
+    context.subscriptions.push(disposableChangeBranch);
+    context.subscriptions.push(disposableCreateBranch);
 
     function fillFileList(status, fileList, is_gitadd=false) {
         console.log(status);

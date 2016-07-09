@@ -22,7 +22,9 @@
         "onCommand:giteasy.doAddAll",
         "onCommand:giteasy.doCommit",
         "onCommand:giteasy.doInit",
-        "onCommand:giteasy.doAddOrigin"
+        "onCommand:giteasy.doAddOrigin",
+        "onCommand:giteasy.doChangeBranch",
+        "onCommand:giteasy.doCreateBranch"
     ],
     "main": "./extension",
     "contributes": {
@@ -50,6 +52,12 @@
         }, {
             "command": "giteasy.doAddOrigin",
             "title": "Git Easy: Add Origin"
+        }, {
+            "command": "giteasy.doChangeBranch",
+            "title": "Git Easy: Change/Checkout Existing Branch"
+        }, {
+            "command": "giteasy.doCreateBranch",
+            "title": "Git Easy: Create New Branch"
         }]
     },
     "scripts": {
