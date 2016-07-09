@@ -49,11 +49,12 @@ function activate(context) {
                 return;
             }
             simpleGit.outputHandler(function (command, stdout, stderr) {
-                outputChannel.clear();
                 stdout.on('data', function(buffer) {
+                    outputChannel.clear();
                     appendOutput(buffer.toString('utf8'));
                 });
                 stderr.on('data', function(buffer) {
+                    outputChannel.clear();
                     appendOutput(buffer.toString('utf8'));
                 });
             }).push("origin", branchSummary.current, function () {
@@ -241,7 +242,6 @@ function activate(context) {
         outputChannel.show(vscode.ViewColumn.Three);
     }
     function appendOutput(text) {
-        console.log(text);
         outputChannel.show(vscode.ViewColumn.Three);
         outputChannel.appendLine(text);
     }
