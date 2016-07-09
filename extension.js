@@ -25,12 +25,8 @@ function activate(context) {
     var disposableOriginCurrentPull = vscode.commands.registerCommand('giteasy.doOriginCurrentPull', function () {
         simpleGit.branch(function(error, branchSummary) {
             if (error) {
-                vscode.window.showErrorMessage(error);
+                showOutput(error);
                 return;
-            }
-            if (error != null) {
-                vscode.window.showErrorMessage("Something broke. Check console.")
-                console.log(error);
             } else if (branchSummary.all.length == 0) {
                 vscode.window.showErrorMessage("No branches found. Git add files and commit maybe?")
             } else {
@@ -48,7 +44,18 @@ function activate(context) {
 
     var disposableOriginCurrentPush = vscode.commands.registerCommand('giteasy.doOriginCurrentPush', function () {
         simpleGit.branch(function(error, branchSummary) {
-            console.log(branchSummary);
+            if (error) {
+                showOutput(error);
+                return;
+            }
+            simpleGit.push("origin", branchSummary.current, function (err, update) {
+                console.log(update);
+                if(update && update.summary.changes) {
+                    showOutput(update.summary.changes);
+                } else if (err) {
+                    showOutput(err);
+                }
+            });
         })
     });
 
@@ -77,14 +84,14 @@ function activate(context) {
             } else {
                 simpleGit.commit(message, function (error, result) {
                     if (error) {
-                        vscode.window.showErrorMessage(error);
+                        showOutput(error);
                         return;
                     } else {
                         console.log(result);
                         var msg = "Committed to branch " + result.branch + " (" + result.commit + ")\n" +
-                                result.summary.changes + " changes, " +
-                                result.summary.insertions + " additions, " +
-                                result.summary.deletions + " deletions.";
+                                result.summary.changes + " change(s), " +
+                                result.summary.insertions + " addition(s), " +
+                                result.summary.deletions + " deletion(s).";
                         showOutput(msg);
                     }
                 })
@@ -96,7 +103,7 @@ function activate(context) {
         var fileList = [];
         simpleGit.status(function(error, status) {
             if (error) {
-                vscode.window.showErrorMessage(error);
+                showOutput(error);
                 return;
             }
             fileList.push({
@@ -128,7 +135,7 @@ function activate(context) {
     var disposableAddAll = vscode.commands.registerCommand('giteasy.doAddAll', function () {
         simpleGit.status(function(error, status) {
             if (error) {
-                vscode.window.showErrorMessage(error);
+                showOutput(error);
                 return;
             }
             status.modified.forEach(function(element) {
@@ -142,7 +149,7 @@ function activate(context) {
         simpleGit.status(function(error, status) {
             console.log(status);
             if (error) {
-                vscode.window.showErrorMessage(error);
+                showOutput(error);
                 return;
             }
             fileList = fillFileList(status, fileList, false);
