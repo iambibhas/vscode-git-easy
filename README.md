@@ -14,6 +14,10 @@ Currently it has just one requirement - `simple-git`, that will get installed al
 
 ## Release Notes
 
+### 0.0.5
+
+Minor bugfixes and updated logo
+
 ### 0.0.1
 
 Initial release of Git Easy.

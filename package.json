@@ -2,8 +2,13 @@
     "name": "git-easy",
     "displayName": "Git Easy",
     "description": "Making git easy and convenient",
-    "version": "0.0.2",
+    "version": "0.0.5",
     "publisher": "bibhasdn",
+    "icon": "images/logo_128.png",
+    "bugs": {
+        "url": "https://github.com/iambibhas/vscode-git-easy/issues",
+        "email": "me@bibhas.in"
+    },
     "engines": {
         "vscode": "^1.0.0"
     },
@@ -12,6 +17,13 @@
     },
     "categories": [
         "Other"
+    ],
+    "keywords": [
+        "git",
+        "github",
+        "sublime",
+        "sublimetext",
+        "vcs"
     ],
     "activationEvents": [
         "onCommand:giteasy.countChars",

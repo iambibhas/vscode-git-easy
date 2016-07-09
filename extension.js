@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-// var projectRoot = vscode.workspace.rootPath;
-var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
+var projectRoot = vscode.workspace.rootPath;
+// var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
 var simpleGit = require('simple-git')((projectRoot) ? projectRoot : '.');
 var childProcess = require('child_process');
 var fs = require('fs');
