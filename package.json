@@ -2,7 +2,7 @@
     "name": "git-easy",
     "displayName": "Git Easy",
     "description": "Making git easy and convenient",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "bibhasdn",
     "engines": {
         "vscode": "^1.0.0"
