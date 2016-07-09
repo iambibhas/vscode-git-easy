@@ -48,13 +48,16 @@ function activate(context) {
                 showOutput(error);
                 return;
             }
-            simpleGit.push("origin", branchSummary.current, function (err, update) {
+            simpleGit.outputHandler(function (command, stdout, stderr) {
+                appendOutput(process.stdout);
+                appendOutput(process.stderr);
+            }).push("origin", branchSummary.current, function (err, update) {
                 console.log(update);
-                if(update && update.summary.changes) {
-                    showOutput(update.summary.changes);
-                } else if (err) {
-                    showOutput(err);
-                }
+                // if(update && update.summary.changes) {
+                //     showOutput(update.summary.changes);
+                // } else if (err) {
+                //     showOutput(err);
+                // }
             });
         })
     });
@@ -107,8 +110,12 @@ function activate(context) {
                 return;
             }
             fileList.push({
-                'label': "Add All Untracked",
-                'description': "AddAllUntracked"
+                'label': "Add All Modified",
+                'description': "AddAllModified"
+            })
+            fileList.push({
+                'label': "Add All Modified + Untracked",
+                'description': "AddAllModifiedUntracked"
             })
             fileList = fillFileList(status, fileList, true)
 
@@ -117,8 +124,17 @@ function activate(context) {
                 if (result == null) {
                     return;
                 }
-                if (result.description == "AddAllUntracked") {
+                if (result.description == "AddAllModified") {
                     simpleGit.status(function(error, status) {
+                        status.modified.forEach(function(element) {
+                            simpleGit.add(element);
+                        }, this);
+                    });
+                } else if (result.description == "AddAllModifiedUntracked") {
+                    simpleGit.status(function(error, status) {
+                        status.modified.forEach(function(element) {
+                            simpleGit.add(element);
+                        }, this);
                         status.not_added.forEach(function(element) {
                             simpleGit.add(element);
                         }, this);
@@ -219,6 +235,10 @@ function activate(context) {
         outputChannel.clear();
         outputChannel.append(text);
         outputChannel.show(vscode.ViewColumn.Three);
+    }
+    function appendOutput(text) {
+        outputChannel.show(vscode.ViewColumn.Three);
+        outputChannel.appendLine(text);
     }
 }
 exports.activate = activate;
