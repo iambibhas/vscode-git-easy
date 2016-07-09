@@ -49,10 +49,10 @@ function activate(context) {
                 return;
             }
             simpleGit.outputHandler(function (command, stdout, stderr) {
-                appendOutput(process.stdout);
-                appendOutput(process.stderr);
-            }).push("origin", branchSummary.current, function (err, update) {
-                console.log(update);
+                outputChannel.clear();
+                stdout.pipe(appendOutput);
+                stderr.pipe(appendOutput);
+            }).push("origin", branchSummary.current, function () {
                 // if(update && update.summary.changes) {
                 //     showOutput(update.summary.changes);
                 // } else if (err) {
