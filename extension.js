@@ -51,12 +51,10 @@ function activate(context) {
             simpleGit.outputHandler(function (command, stdout, stderr) {
                 outputChannel.clear();
                 stdout.on('data', function(buffer) {
-                    console.log('stdout');
-                    console.log(buffer);
                     appendOutput(buffer.toString('utf8'));
                 });
                 stderr.on('data', function(buffer) {
-                    console.log(buffer.toString());
+                    appendOutput(buffer.toString('utf8'));
                 });
             }).push("origin", branchSummary.current, function () {
                 // if(update && update.summary.changes) {
