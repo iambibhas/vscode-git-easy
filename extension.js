@@ -51,7 +51,7 @@ function activate(context) {
             simpleGit.outputHandler(function (command, stdout, stderr) {
                 outputChannel.clear();
                 stdout.on('data', function(buffer) {
-                    console.log(buffer.data);
+                    appendOutput(buffer.data);
                 });
                 stderr.on('data', function(buffer) {
                     console.log(buffer.data);
