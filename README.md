@@ -6,7 +6,7 @@ Git Easy makes is really easy to use Git with your project. This is inspired by 
 
 It currently supports these commands -
 
-\!\[commands\]\(http://i.imgur.com/pGV4MyX.png\)
+![commands](http://i.imgur.com/pGV4MyX.png)
 
 ## Requirements
 
