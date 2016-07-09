@@ -1,30 +1,33 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-// var simpleGit = require('simple-git')((vscode.workspace.rootPath) ? vscode.workspace.rootPath : '.');
-var simpleGit = require('simple-git')("/home/bibhas/Rivendell/vscode/git-easy/");
+// var projectRoot = vscode.workspace.rootPath;
+var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
+var simpleGit = require('simple-git')((projectRoot) ? projectRoot : '.');
+var childProcess = require('child_process');
+var fs = require('fs');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    var disposableTest = vscode.commands.registerCommand('extension.countChars', function () {
-        var editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            return; // No open text editor
+    var outputChannel = vscode.window.createOutputChannel("GitEasy");
+
+    var disposableInit = vscode.commands.registerCommand('giteasy.doInit', function () {
+        if (projectRoot === undefined) {
+            vscode.window.showErrorMessage("No directory open. Please open a directory first.")
+        } else {
+            simpleGit.init(function () {
+                vscode.window.showInformationMessage("Initiated git repository at " + projectRoot);
+            });
         }
-
-        var selection = editor.selection;
-        var text = editor.document.getText(selection);
-
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Selected characters: ' + text.length);
     });
 
-    var disposableOriginPull = vscode.commands.registerCommand('extension.doOriginPull', function () {
+    var disposableOriginCurrentPull = vscode.commands.registerCommand('giteasy.doOriginCurrentPull', function () {
         simpleGit.branch(function(error, branchSummary) {
+            if (error) {
+                vscode.window.showErrorMessage(error);
+                return;
+            }
             if (error != null) {
                 vscode.window.showErrorMessage("Something broke. Check console.")
                 console.log(error);
@@ -32,19 +35,70 @@ function activate(context) {
                 vscode.window.showErrorMessage("No branches found. Git add files and commit maybe?")
             } else {
                 console.log(branchSummary);
+                simpleGit.pull("origin", branchSummary.current, function(err, update) {
+                    if(update && update.summary.changes) {
+                        showOutput(update.summary.changes);
+                    } else if (err) {
+                        showOutput(err);
+                    }
+                });
             }
         })
     });
 
-    var disposableOriginPush = vscode.commands.registerCommand('extension.doOriginPush', function () {
+    var disposableOriginCurrentPush = vscode.commands.registerCommand('giteasy.doOriginCurrentPush', function () {
         simpleGit.branch(function(error, branchSummary) {
             console.log(branchSummary);
         })
     });
 
-    var disposableAdd = vscode.commands.registerCommand('extension.doAdd', function () {
+    var disposableAddOrigin = vscode.commands.registerCommand('giteasy.doAddOrigin', function () {
+        vscode.window.showInputBox({
+            'placeHolder': "Enter origin URL"
+        }).then(function (message) {
+            simpleGit.addRemote("origin", message, function(err, result) {
+                if (err) {
+                    showOutput(err);
+                    return;
+                }
+            })
+        });
+    });
+
+    var disposableCommit = vscode.commands.registerCommand('giteasy.doCommit', function () {
+        var commit = vscode.window.showInputBox({
+            'placeHolder': "Enter your commit message"
+        });
+        commit.then(function (message) {
+            if (message === undefined) {
+                return;
+            } else if (message === "") {
+                vscode.window.showInformationMessage("You must enter a commit message!");
+            } else {
+                simpleGit.commit(message, function (error, result) {
+                    if (error) {
+                        vscode.window.showErrorMessage(error);
+                        return;
+                    }
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        var msg = result.branch + " " + result.commit
+                                + ": " + "+" + result.insertions + " -" + result.deletions;
+                        vscode.window.showInformationMessage(msg)
+                    }
+                })
+            }
+        })
+    });
+
+    var disposableAdd = vscode.commands.registerCommand('giteasy.doAdd', function () {
         var fileList = [];
         simpleGit.status(function(error, status) {
+            if (error) {
+                vscode.window.showErrorMessage(error);
+                return;
+            }
             fileList.push({
                 'label': "Add All Untracked",
                 'description': "AddAllUntracked"
@@ -53,7 +107,6 @@ function activate(context) {
 
             var qp = vscode.window.showQuickPick(fileList);
             qp.then(function (result) {
-                console.log(result);
                 if (result == null) {
                     return;
                 }
@@ -72,30 +125,47 @@ function activate(context) {
         });
     });
 
-    var disposableStatus = vscode.commands.registerCommand('extension.doStatus', function () {
+    var disposableStatus = vscode.commands.registerCommand('giteasy.doStatus', function () {
         var fileList = [];
         simpleGit.status(function(error, status) {
             console.log(status);
+            if (error) {
+                vscode.window.showErrorMessage(error);
+                return;
+            }
+
             fileList = fillFileList(status, fileList, false);
 
             var qp = vscode.window.showQuickPick(fileList);
             qp.then(function (result) {
-                console.log(result);
                 if (result == null) {
                     return;
                 }
                 if (["Untracked", "New"].indexOf(result.description) >= 0) {
                     return;
+                } else {
+                    simpleGit.diff([result.label, ], function (error, result) {
+                        if (error) throw error;
+                        fs.writeFile('/tmp/.git-easy.diff', result, (err) => {
+                            if (err) throw err;
+                            vscode.workspace.openTextDocument('/tmp/.git-easy.diff')
+                                .then(function (file) {
+                                    vscode.window.showTextDocument(file, vscode.ViewColumn.Two, false);
+                                });
+                        });
+                    });
                 }
             })
         });
     });
 
-    context.subscriptions.push(disposableTest);
-    context.subscriptions.push(disposableOriginPull);
-    context.subscriptions.push(disposableOriginPush);
+    context.subscriptions.push(disposableInit);
+    context.subscriptions.push(disposableOriginCurrentPull);
+    context.subscriptions.push(disposableOriginCurrentPush);
     context.subscriptions.push(disposableAdd);
     context.subscriptions.push(disposableStatus);
+    context.subscriptions.push(disposableCommit);
+    context.subscriptions.push(disposableAddOrigin);
 
     function fillFileList(status, fileList, is_gitadd=false) {
         status.modified.forEach(function(element) {
@@ -123,6 +193,12 @@ function activate(context) {
             }, this);
         }
         return fileList;
+    }
+
+    function showOutput(text) {
+        outputChannel.clear();
+        outputChannel.append(text);
+        outputChannel.show(vscode.ViewColumn.Three);
     }
 }
 exports.activate = activate;

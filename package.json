@@ -14,29 +14,38 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.countChars",
-        "onCommand:extension.doOriginPull",
-        "onCommand:extension.doOriginPush",
-        "onCommand:extension.doStatus",
-        "onCommand:extension.doAdd"
+        "onCommand:giteasy.countChars",
+        "onCommand:giteasy.doOriginCurrentPull",
+        "onCommand:giteasy.doOriginCurrentPush",
+        "onCommand:giteasy.doStatus",
+        "onCommand:giteasy.doAdd",
+        "onCommand:giteasy.doCommit",
+        "onCommand:giteasy.doInit",
+        "onCommand:giteasy.doAddOrigin"
     ],
     "main": "./extension",
     "contributes": {
         "commands": [{
-            "command": "extension.countChars",
-            "title": "Count Characters"
+            "command": "giteasy.doInit",
+            "title": "Git Easy: Init"
         }, {
-            "command": "extension.doOriginPull",
-            "title": "Git Easy: Pull Current Branch"
+            "command": "giteasy.doOriginCurrentPull",
+            "title": "Git Easy: Pull Current Branch from Origin"
         }, {
-            "command": "extension.doOriginPush",
-            "title": "Git Easy: Push Current Branch"
+            "command": "giteasy.doOriginCurrentPush",
+            "title": "Git Easy: Push Current Branch to Origin"
         }, {
-            "command": "extension.doAdd",
+            "command": "giteasy.doAdd",
             "title": "Git Easy: Add"
         }, {
-            "command": "extension.doStatus",
+            "command": "giteasy.doStatus",
             "title": "Git Easy: Status"
+        }, {
+            "command": "giteasy.doCommit",
+            "title": "Git Easy: Commit"
+        }, {
+            "command": "giteasy.doAddOrigin",
+            "title": "Git Easy: Add Origin"
         }]
     },
     "scripts": {
