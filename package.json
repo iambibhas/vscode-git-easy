@@ -19,6 +19,7 @@
         "onCommand:giteasy.doOriginCurrentPush",
         "onCommand:giteasy.doStatus",
         "onCommand:giteasy.doAdd",
+        "onCommand:giteasy.doAddAll",
         "onCommand:giteasy.doCommit",
         "onCommand:giteasy.doInit",
         "onCommand:giteasy.doAddOrigin"
@@ -36,7 +37,10 @@
             "title": "Git Easy: Push Current Branch to Origin"
         }, {
             "command": "giteasy.doAdd",
-            "title": "Git Easy: Add"
+            "title": "Git Easy: Add File/Directory"
+        }, {
+            "command": "giteasy.doAddAll",
+            "title": "Git Easy: Add All Modified File/Directory"
         }, {
             "command": "giteasy.doStatus",
             "title": "Git Easy: Status"

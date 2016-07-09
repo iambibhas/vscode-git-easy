@@ -79,10 +79,8 @@ function activate(context) {
                     if (error) {
                         vscode.window.showErrorMessage(error);
                         return;
-                    }
-                    if (error) {
-                        console.log(error);
                     } else {
+                        console.log(result);
                         var msg = result.branch + " " + result.commit
                                 + ": " + "+" + result.insertions + " -" + result.deletions;
                         vscode.window.showInformationMessage(msg)
@@ -125,6 +123,18 @@ function activate(context) {
         });
     });
 
+    var disposableAddAll = vscode.commands.registerCommand('giteasy.doAddAll', function () {
+        simpleGit.status(function(error, status) {
+            if (error) {
+                vscode.window.showErrorMessage(error);
+                return;
+            }
+            status.modified.forEach(function(element) {
+                simpleGit.add(element);
+            }, this);
+        });
+    });
+
     var disposableStatus = vscode.commands.registerCommand('giteasy.doStatus', function () {
         var fileList = [];
         simpleGit.status(function(error, status) {
@@ -133,7 +143,6 @@ function activate(context) {
                 vscode.window.showErrorMessage(error);
                 return;
             }
-
             fileList = fillFileList(status, fileList, false);
 
             var qp = vscode.window.showQuickPick(fileList);
@@ -163,11 +172,13 @@ function activate(context) {
     context.subscriptions.push(disposableOriginCurrentPull);
     context.subscriptions.push(disposableOriginCurrentPush);
     context.subscriptions.push(disposableAdd);
+    context.subscriptions.push(disposableAddAll);
     context.subscriptions.push(disposableStatus);
     context.subscriptions.push(disposableCommit);
     context.subscriptions.push(disposableAddOrigin);
 
     function fillFileList(status, fileList, is_gitadd=false) {
+        console.log(status);
         status.modified.forEach(function(element) {
             var item = {
                 'label': element,
