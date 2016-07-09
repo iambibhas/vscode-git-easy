@@ -50,8 +50,10 @@ function activate(context) {
             }
             simpleGit.outputHandler(function (command, stdout, stderr) {
                 outputChannel.clear();
-                stdout.pipe(appendOutput);
-                stderr.pipe(appendOutput);
+                stdout.on('data', function(text) {
+                    console.log(text);
+                });
+                // stderr.pipe(appendOutput);
             }).push("origin", branchSummary.current, function () {
                 // if(update && update.summary.changes) {
                 //     showOutput(update.summary.changes);
@@ -237,6 +239,7 @@ function activate(context) {
         outputChannel.show(vscode.ViewColumn.Three);
     }
     function appendOutput(text) {
+        console.log(text);
         outputChannel.show(vscode.ViewColumn.Three);
         outputChannel.appendLine(text);
     }
