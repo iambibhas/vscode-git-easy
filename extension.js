@@ -85,7 +85,7 @@ function activate(context) {
                                 result.summary.changes + " changes, " +
                                 result.summary.insertions + " additions, " +
                                 result.summary.deletions + " deletions.";
-
+                        showOutput(msg);
                     }
                 })
             }
