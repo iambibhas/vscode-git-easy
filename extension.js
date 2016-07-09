@@ -57,13 +57,10 @@ function activate(context) {
                     outputChannel.clear();
                     appendOutput(buffer.toString('utf8'));
                 });
-            }).push("origin", branchSummary.current, function () {
-                // if(update && update.summary.changes) {
-                //     showOutput(update.summary.changes);
-                // } else if (err) {
-                //     showOutput(err);
-                // }
-            });
+            }).push("origin", branchSummary.current, function () {});
+            simpleGit.outputHandler(function (command, stdout, stderr) {
+                // do nothing
+            })
         })
     });
 
