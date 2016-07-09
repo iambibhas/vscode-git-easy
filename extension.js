@@ -59,7 +59,7 @@ function activate(context) {
                 });
             }).push("origin", branchSummary.current, function () {});
             simpleGit.outputHandler(function (command, stdout, stderr) {
-                // do nothing
+                // do nothinggg
             })
         })
     });
