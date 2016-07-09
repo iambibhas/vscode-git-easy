@@ -81,9 +81,11 @@ function activate(context) {
                         return;
                     } else {
                         console.log(result);
-                        var msg = result.branch + " " + result.commit
-                                + ": " + "+" + result.insertions + " -" + result.deletions;
-                        vscode.window.showInformationMessage(msg)
+                        var msg = "Committed to branch " + result.branch + " (" + result.commit + ")\n" +
+                                result.summary.changes + " changes, " +
+                                result.summary.insertions + " additions, " +
+                                result.summary.deletions + " deletions.";
+
                     }
                 })
             }
