@@ -53,10 +53,10 @@ function activate(context) {
                 stdout.on('data', function(buffer) {
                     console.log('stdout');
                     console.log(buffer);
-                    appendOutput(buffer.data.toString('utf8'));
+                    appendOutput(buffer.toString('utf8'));
                 });
                 stderr.on('data', function(buffer) {
-                    console.log(buffer.data.toString());
+                    console.log(buffer.toString());
                 });
             }).push("origin", branchSummary.current, function () {
                 // if(update && update.summary.changes) {
