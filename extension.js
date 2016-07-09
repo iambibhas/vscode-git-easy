@@ -50,10 +50,12 @@ function activate(context) {
             }
             simpleGit.outputHandler(function (command, stdout, stderr) {
                 outputChannel.clear();
-                stdout.on('data', function(text) {
-                    console.log(text);
+                stdout.on('data', function(buffer) {
+                    console.log(buffer.data);
                 });
-                // stderr.pipe(appendOutput);
+                stderr.on('data', function(buffer) {
+                    console.log(buffer.data);
+                });
             }).push("origin", branchSummary.current, function () {
                 // if(update && update.summary.changes) {
                 //     showOutput(update.summary.changes);
