@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-var projectRoot = vscode.workspace.rootPath;
-// var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
+// var projectRoot = vscode.workspace.rootPath;
+var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
 var simpleGit = require('simple-git')((projectRoot) ? projectRoot : '.');
 var childProcess = require('child_process');
 var fs = require('fs');
@@ -20,6 +20,36 @@ function activate(context) {
                 vscode.window.showInformationMessage("Initiated git repository at " + projectRoot);
             });
         }
+    });
+
+    var disposableLogAll = vscode.commands.registerCommand('giteasy.doLogAll', function () {
+        simpleGit.log({}, function (error, result) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+            var logs = [];
+            var last100 = result.all.slice(0, 100);
+            last100.forEach(function(element) {
+                if (!element.hasOwnProperty("hash")) {
+                    return;
+                }
+                logs.push({
+                    'label': element.message,
+                    'description': timeSince(new Date(element.date)) + " by " + (element.author_name || element.author_email),
+                    'detail': element.hash
+                })
+            }, this);
+            vscode.window.showQuickPick(logs).then(function (result) {
+                if (result == null) {
+                    return;
+                }
+                simpleGit.show([result.detail, ], function (error, result) {
+                    if (error) throw error;
+                    showSidebarDiff(result);
+                });
+            })
+        })
     });
 
     var disposableOriginCurrentPull = vscode.commands.registerCommand('giteasy.doOriginCurrentPull', function () {
@@ -281,7 +311,15 @@ function activate(context) {
         }
         return fileList;
     }
-
+    function showSidebarDiff(text) {
+        fs.writeFile('/tmp/.git-easy.diff', text, (err) => {
+            if (err) throw err;
+            vscode.workspace.openTextDocument('/tmp/.git-easy.diff')
+                .then(function (file) {
+                    vscode.window.showTextDocument(file, vscode.ViewColumn.Two, false);
+                });
+        });
+    }
     function showOutput(text) {
         outputChannel.clear();
         outputChannel.append(text);
@@ -290,6 +328,30 @@ function activate(context) {
     function appendOutput(text) {
         outputChannel.show(vscode.ViewColumn.Three);
         outputChannel.appendLine(text);
+    }
+    function timeSince(date) {
+        var seconds = Math.floor((new Date() - date) / 1000);
+        var interval = Math.floor(seconds / 31536000);
+        if (interval > 1) {
+            return interval + " years";
+        }
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) {
+            return interval + " months";
+        }
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) {
+            return interval + " days";
+        }
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) {
+            return interval + " hours";
+        }
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) {
+            return interval + " minutes";
+        }
+        return Math.floor(seconds) + " seconds";
     }
 }
 exports.activate = activate;

@@ -36,7 +36,8 @@
         "onCommand:giteasy.doInit",
         "onCommand:giteasy.doAddOrigin",
         "onCommand:giteasy.doChangeBranch",
-        "onCommand:giteasy.doCreateBranch"
+        "onCommand:giteasy.doCreateBranch",
+        "onCommand:giteasy.doLogAll"
     ],
     "main": "./extension",
     "contributes": {
@@ -54,7 +55,7 @@
             "title": "Git Easy: Add File/Directory"
         }, {
             "command": "giteasy.doAddAll",
-            "title": "Git Easy: Add All Modified File/Directory"
+            "title": "Git Easy: Add All Modified"
         }, {
             "command": "giteasy.doStatus",
             "title": "Git Easy: Status"
@@ -70,6 +71,9 @@
         }, {
             "command": "giteasy.doCreateBranch",
             "title": "Git Easy: Create New Branch"
+        }, {
+            "command": "giteasy.doLogAll",
+            "title": "Git Easy: Log All"
         }]
     },
     "scripts": {
