@@ -1,8 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-// var projectRoot = vscode.workspace.rootPath;
-var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
+var projectRoot = vscode.workspace.rootPath;
+// var projectRoot = "/home/bibhas/Rivendell/vscode/git-easy/";
 var simpleGit = require('simple-git')((projectRoot) ? projectRoot : '.');
 var childProcess = require('child_process');
 var fs = require('fs');
@@ -36,8 +36,8 @@ function activate(context) {
                 }
                 logs.push({
                     'label': element.message,
-                    'description': timeSince(new Date(element.date)) + " by " + (element.author_name || element.author_email),
-                    'detail': element.hash
+                    'detail': timeSince(new Date(element.date)) + " by " + (element.author_name || element.author_email) + " | " + element.date,
+                    'description': element.hash.substring(0, 7)
                 })
             }, this);
             vscode.window.showQuickPick(logs).then(function (result) {
