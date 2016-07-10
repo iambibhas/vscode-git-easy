@@ -52,6 +52,16 @@ function activate(context) {
         })
     });
 
+    var disposableLogCurrentFile = vscode.commands.registerCommand('giteasy.doLogCurrentFile', function () {
+        console.log(vscode.window.activeTextEditor);
+        simpleGit.log({'file': vscode.window.activeTextEditor._documentData._uri.fsPath}, function (error, result) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+        })
+    });
+
     var disposableOriginCurrentPull = vscode.commands.registerCommand('giteasy.doOriginCurrentPull', function () {
         simpleGit.branch(function(error, branchSummary) {
             if (error) {
@@ -92,6 +102,31 @@ function activate(context) {
                 // do nothinggg
             })
         })
+    });
+
+    var disposableAddRemote = vscode.commands.registerCommand('giteasy.doAddRemote', function () {
+        vscode.window.showInputBox({
+            'placeHolder': "Enter remote name"
+        }).then(function (remote) {
+            if (!remote) {
+                vscode.window.showErrorMessage("You must enter a name for the remote");
+                return;
+            }
+            vscode.window.showInputBox({
+                'placeHolder': "Enter remote url"
+            }).then(function (url) {
+                if (!url) {
+                    vscode.window.showErrorMessage("You must enter a url for the remote");
+                    return;
+                }
+                simpleGit.addRemote(remote, url, function(err, result) {
+                    if (err) {
+                        showOutput(err);
+                        return;
+                    }
+                })
+            })
+        });
     });
 
     var disposableAddOrigin = vscode.commands.registerCommand('giteasy.doAddOrigin', function () {
@@ -280,6 +315,7 @@ function activate(context) {
     context.subscriptions.push(disposableStatus);
     context.subscriptions.push(disposableCommit);
     context.subscriptions.push(disposableAddOrigin);
+    context.subscriptions.push(disposableAddRemote);
     context.subscriptions.push(disposableChangeBranch);
     context.subscriptions.push(disposableCreateBranch);
 

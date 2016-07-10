@@ -2,7 +2,7 @@
     "name": "git-easy",
     "displayName": "Git Easy",
     "description": "Making git easy and convenient",
-    "version": "0.0.6",
+    "version": "1.7.0",
     "publisher": "bibhasdn",
     "icon": "images/logo_128.png",
     "bugs": {
@@ -35,9 +35,11 @@
         "onCommand:giteasy.doCommit",
         "onCommand:giteasy.doInit",
         "onCommand:giteasy.doAddOrigin",
+        "onCommand:giteasy.doAddRemote",
         "onCommand:giteasy.doChangeBranch",
         "onCommand:giteasy.doCreateBranch",
-        "onCommand:giteasy.doLogAll"
+        "onCommand:giteasy.doLogAll",
+        "onCommand:giteasy.doLogCurrentFile"
     ],
     "main": "./extension",
     "contributes": {
@@ -66,6 +68,9 @@
             "command": "giteasy.doAddOrigin",
             "title": "Git Easy: Add Origin"
         }, {
+            "command": "giteasy.doAddRemote",
+            "title": "Git Easy: Add Remote"
+        }, {
             "command": "giteasy.doChangeBranch",
             "title": "Git Easy: Change/Checkout Existing Branch"
         }, {
@@ -74,6 +79,9 @@
         }, {
             "command": "giteasy.doLogAll",
             "title": "Git Easy: Log All"
+        }, {
+            "command": "giteasy.doLogCurrentFile",
+            "title": "Git Easy: Log Current File"
         }]
     },
     "scripts": {

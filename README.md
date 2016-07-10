@@ -6,13 +6,33 @@ Git Easy makes is really easy to use Git with your project. This is inspired by 
 
 It currently supports these commands -
 
-![commands](http://i.imgur.com/pGV4MyX.png)
+ - Git Easy: Init
+ - Git Easy: Add Origin
+ - Git Easy: Add Remote
+ - Git Easy: Add File/Directory
+ - Git Easy: Add All Modified
+ - Git Easy: Commit
+ - Git Easy: Pull Current Branch from Origin
+ - Git Easy: Push Current Branch to Origin
+ - Git Easy: Status
+ - Git Easy: Create New Branch
+ - Git Easy: Change/Checkout Existing Branch
+ - Git Easy: Log All
+ - Git Easy: Log Current File
 
 ## Requirements
 
 Currently it has just one requirement - `simple-git`, that will get installed along with the extension.
 
 ## Release Notes
+
+### 1.7.0
+
+Added command to add remote.
+
+### 0.0.6
+
+Added Git Log. Clicking a log opens the details of that commit.
 
 ### 0.0.5
 
