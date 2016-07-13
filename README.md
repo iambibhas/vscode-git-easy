@@ -26,6 +26,10 @@ Currently it has just one requirement - `simple-git`, that will get installed al
 
 ## Release Notes
 
+### 1.8.0
+
+Fixed bug with log command
+
 ### 1.7.0
 
 Added command to add remote.

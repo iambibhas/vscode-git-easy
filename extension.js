@@ -28,23 +28,13 @@ function activate(context) {
                 showOutput(error);
                 return;
             }
-            var logs = [];
             var last100 = result.all.slice(0, 100);
-            last100.forEach(function(element) {
-                if (!element.hasOwnProperty("hash")) {
-                    return;
-                }
-                logs.push({
-                    'label': element.message,
-                    'detail': timeSince(new Date(element.date)) + " by " + (element.author_name || element.author_email) + " | " + element.date,
-                    'description': element.hash.substring(0, 7)
-                })
-            }, this);
+            var logs = fillCommits(last100);
             vscode.window.showQuickPick(logs).then(function (result) {
                 if (result == null) {
                     return;
                 }
-                simpleGit.show([result.detail, ], function (error, result) {
+                simpleGit.show([result.description, ], function (error, result) {
                     if (error) throw error;
                     showSidebarDiff(result);
                 });
@@ -53,14 +43,39 @@ function activate(context) {
     });
 
     var disposableLogCurrentFile = vscode.commands.registerCommand('giteasy.doLogCurrentFile', function () {
-        console.log(vscode.window.activeTextEditor);
-        simpleGit.log({'file': vscode.window.activeTextEditor._documentData._uri.fsPath}, function (error, result) {
+        simpleGit.log({'file': vscode.window.activeTextEditor.document.fileName}, function (error, result) {
             if (error) {
                 showOutput(error);
                 return;
             }
+            var logs = fillCommits(result.all);
+            vscode.window.showQuickPick(logs).then(function (result) {
+                if (result == null) {
+                    return;
+                }
+                simpleGit.show([result.description, ], function (error, result) {
+                    if (error) throw error;
+                    showSidebarDiff(result);
+                });
+            })
         })
     });
+
+    var fillCommits = function(listOfCommits) {
+        var logs = [];
+        listOfCommits.forEach(function(element) {
+            if (!element.hasOwnProperty("hash")) {
+                return;
+            }
+            logs.push({
+                'label': element.message,
+                'detail': timeSince(new Date(element.date)) + " by " + (element.author_name || element.author_email) + " | " + element.date,
+                'description': element.hash.substring(0, 7)
+            })
+        }, this);
+        return logs;
+
+    }
 
     var disposableOriginCurrentPull = vscode.commands.registerCommand('giteasy.doOriginCurrentPull', function () {
         simpleGit.branch(function(error, branchSummary) {
@@ -167,8 +182,6 @@ function activate(context) {
                     simpleGit.checkout(result, function (error, result) {
                         if (error) {
                             showOutput(error);
-                        } else {
-                            console.log(result);
                         }
                     })
                 }
@@ -183,8 +196,6 @@ function activate(context) {
             simpleGit.checkoutLocalBranch(branchName, function (error, result) {
                 if (error) {
                     showOutput(error);
-                } else {
-                    console.log(result);
                 }
             })
         });
@@ -318,6 +329,7 @@ function activate(context) {
     context.subscriptions.push(disposableAddRemote);
     context.subscriptions.push(disposableChangeBranch);
     context.subscriptions.push(disposableCreateBranch);
+    context.subscriptions.push(disposableLogCurrentFile);
 
     function fillFileList(status, fileList, is_gitadd=false) {
         console.log(status);
