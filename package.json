@@ -29,6 +29,7 @@
         "onCommand:giteasy.countChars",
         "onCommand:giteasy.doOriginCurrentPull",
         "onCommand:giteasy.doOriginCurrentPush",
+        "onCommand:giteasy.doRemoteCurrentPush",
         "onCommand:giteasy.doStatus",
         "onCommand:giteasy.doAdd",
         "onCommand:giteasy.doAddAll",
@@ -53,6 +54,9 @@
         }, {
             "command": "giteasy.doOriginCurrentPush",
             "title": "Git Easy: Push Current Branch to Origin"
+        }, {
+            "command": "giteasy.doRemoteCurrentPush",
+            "title": "Git Easy: Push Current Branch"
         }, {
             "command": "giteasy.doAdd",
             "title": "Git Easy: Add File/Directory"

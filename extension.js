@@ -119,6 +119,40 @@ function activate(context) {
         })
     });
 
+    var disposableRemoteCurrentPush = vscode.commands.registerCommand('giteasy.doRemoteCurrentPush', function () {
+        simpleGit.getRemotes(function (error, remotes) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+            var arr_remotes = [];
+            remotes.forEach(function(element) {
+                arr_remotes.push(element.name);
+            }, this);
+            vscode.window.showQuickPick(arr_remotes).then(function (remote) {
+                simpleGit.branch(function(error, branchSummary) {
+                    if (error) {
+                        showOutput(error);
+                        return;
+                    }
+                    simpleGit.outputHandler(function (command, stdout, stderr) {
+                        stdout.on('data', function(buffer) {
+                            outputChannel.clear();
+                            appendOutput(buffer.toString('utf8'));
+                        });
+                        stderr.on('data', function(buffer) {
+                            outputChannel.clear();
+                            appendOutput(buffer.toString('utf8'));
+                        });
+                    }).push(remote, branchSummary.current, function () {});
+                    simpleGit.outputHandler(function (command, stdout, stderr) {
+                        // do nothinggg
+                    });
+                });
+            });
+        });
+    });
+
     var disposableAddRemote = vscode.commands.registerCommand('giteasy.doAddRemote', function () {
         vscode.window.showInputBox({
             'placeHolder': "Enter remote name"
@@ -321,6 +355,7 @@ function activate(context) {
     context.subscriptions.push(disposableInit);
     context.subscriptions.push(disposableOriginCurrentPull);
     context.subscriptions.push(disposableOriginCurrentPush);
+    context.subscriptions.push(disposableRemoteCurrentPush);
     context.subscriptions.push(disposableAdd);
     context.subscriptions.push(disposableAddAll);
     context.subscriptions.push(disposableStatus);

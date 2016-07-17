@@ -14,6 +14,7 @@ It currently supports these commands -
  - Git Easy: Commit
  - Git Easy: Pull Current Branch from Origin
  - Git Easy: Push Current Branch to Origin
+ - Git Easy: Push Current Branch (to any remote)
  - Git Easy: Status
  - Git Easy: Create New Branch
  - Git Easy: Change/Checkout Existing Branch
