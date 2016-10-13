@@ -6,6 +6,7 @@ var projectRoot = vscode.workspace.rootPath;
 var simpleGit = require('simple-git')((projectRoot) ? projectRoot : '.');
 var childProcess = require('child_process');
 var fs = require('fs');
+var os = require('os');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -339,9 +340,12 @@ function activate(context) {
                 } else {
                     simpleGit.diff([result.label, ], function (error, result) {
                         if (error) throw error;
-                        fs.writeFile('/tmp/.git-easy.diff', result, (err) => {
+
+                        var diffFile = os.tmpdir() + "/.git-easy.diff";
+
+                        fs.writeFile(diffFile, result, (err) => {
                             if (err) throw err;
-                            vscode.workspace.openTextDocument('/tmp/.git-easy.diff')
+                            vscode.workspace.openTextDocument(diffFile)
                                 .then(function (file) {
                                     vscode.window.showTextDocument(file, vscode.ViewColumn.Two, false);
                                 });
