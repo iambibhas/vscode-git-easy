@@ -37,6 +37,7 @@
         "onCommand:giteasy.doStatus",
         "onCommand:giteasy.doAdd",
         "onCommand:giteasy.doAddAll",
+        "onCommand:giteasy.doAddCurrentFile",
         "onCommand:giteasy.doCommit",
         "onCommand:giteasy.doInit",
         "onCommand:giteasy.doAddOrigin",
@@ -67,6 +68,9 @@
         }, {
             "command": "giteasy.doAddAll",
             "title": "Git Easy: Add All Modified"
+        }, {
+            "command": "giteasy.doAddCurrentFile",
+            "title": "Git Easy: Add Current File"
         }, {
             "command": "giteasy.doStatus",
             "title": "Git Easy: Status"
