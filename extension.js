@@ -62,6 +62,15 @@ function activate(context) {
         })
     });
 
+    var disposableCheckoutCurrentFile = vscode.commands.registerCommand('giteasy.doCheckoutCurrentFile', function () {
+        simpleGit.checkout(vscode.window.activeTextEditor.document.fileName, function (error, result) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+        })
+    })
+
     var fillCommits = function(listOfCommits) {
         var logs = [];
         listOfCommits.forEach(function(element) {
@@ -369,6 +378,7 @@ function activate(context) {
     context.subscriptions.push(disposableChangeBranch);
     context.subscriptions.push(disposableCreateBranch);
     context.subscriptions.push(disposableLogCurrentFile);
+    context.subscriptions.push(disposableCheckoutCurrentFile);
 
     function fillFileList(status, fileList, is_gitadd=false) {
         console.log(status);

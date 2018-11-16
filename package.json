@@ -91,6 +91,9 @@
         }, {
             "command": "giteasy.doLogCurrentFile",
             "title": "Git Easy: Log Current File"
+        }, {
+            "command": "giteasy.doCheckoutCurrentFile",
+            "title": "Git Easy: Checkout Current File"
         }]
     },
     "scripts": {
