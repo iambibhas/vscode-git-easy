@@ -38,6 +38,7 @@
         "onCommand:giteasy.doAdd",
         "onCommand:giteasy.doAddAll",
         "onCommand:giteasy.doAddCurrentFile",
+        "onCommand:giteasy.doUnstageCurrentFile",
         "onCommand:giteasy.doCommit",
         "onCommand:giteasy.doInit",
         "onCommand:giteasy.doAddOrigin",
@@ -71,6 +72,9 @@
         }, {
             "command": "giteasy.doAddCurrentFile",
             "title": "Git Easy: Add Current File"
+        }, {
+            "command": "giteasy.doUnstageCurrentFile",
+            "title": "Git Easy: Unstage Current File"
         }, {
             "command": "giteasy.doStatus",
             "title": "Git Easy: Status"

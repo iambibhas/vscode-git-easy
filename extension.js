@@ -333,6 +333,15 @@ function activate(context) {
         simpleGit.add(vscode.window.activeTextEditor.document.fileName);
     });
 
+    var disposableUnstageCurrentFile = vscode.commands.registerCommand('giteasy.doUnstageCurrentFile', function () {
+        simpleGit.reset(["--", vscode.window.activeTextEditor.document.fileName], function (error) {
+            if (error) {
+                showOutput(error);
+                return;
+            }
+        });
+    });
+
     var disposableStatus = vscode.commands.registerCommand('giteasy.doStatus', function () {
         var fileList = [];
         simpleGit.status(function(error, status) {
@@ -376,6 +385,7 @@ function activate(context) {
     context.subscriptions.push(disposableAdd);
     context.subscriptions.push(disposableAddAll);
     context.subscriptions.push(disposableAddCurrentFile);
+    context.subscriptions.push(disposableUnstageCurrentFile);
     context.subscriptions.push(disposableStatus);
     context.subscriptions.push(disposableCommit);
     context.subscriptions.push(disposableAddOrigin);
